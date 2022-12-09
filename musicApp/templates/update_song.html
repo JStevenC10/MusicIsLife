@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} Update song! {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <h1 class="text-center text-success">Update song!</h2>
+            <div class="card">
+                <div class="card card-body">
+                    <form action="{% url 'update' song.id %}" method='POST'>
+                        {% csrf_token %}
+                        <div class="form-group mt-2">
+                            <input class="form-control" type="text" placeholder='{{song.artist}}' name='artist' value='{{song.artist}}'>
+                        </div>
+                        <div class="form-group mt-2">
+                            <input class="form-control" type="text" placeholder='{{song.song}}' name='song' value='{{song.song}}'>
+                        </div>
+                        <div class="form-group mt-2">
+                            <input class="form-control" type="text" placeholder='{{song.duration}}' name='duration' value='{{song.duration}}'>
+                        </div>
+                        <div class="form-group mt-2">
+                            <input class="form-control" type="text" placeholder='{{song.gender}}' name='gender' value='{{song.gender}}'>
+                        </div>
+                            <button class="btn btn-success btn-block mt-2">Update</button>
+                            <a class="btn btn-danger mt-2" href="{% url 'all_songs' %}">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
