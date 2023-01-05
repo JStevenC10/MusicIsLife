@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Song
 
 # Create your views here.
@@ -44,5 +46,15 @@ def delete(request, id):
     del_song.delete()
     return redirect(to=my_songs)
 
+
 def contact(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        title = request.POST['title']
+        message = request.POST['message']
+        send_mail(title, message, email, [settings.EMAIL_HOST_USER], fail_silently=False)
+        return render(request, 'contact.html', {
+            'message': 'email send successfully! THANKS YOU!'
+        })
+
     return render(request, 'contact.html')
