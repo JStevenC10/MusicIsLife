@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} Register Now {% endblock %}
+
+
+{% block content %}
+
+<div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <h1>Register now!</h1>
+            <div class="card">
+                <div class="card card-body">
+                    <form action="" method='POST'>
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <button class='btn btn-primary' type="submit">Sign Up</button>
+                    </form>
+                </div>
+            </div> 
+        </div>
+{% endblock %}
