@@ -1,46 +1,52 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 from .forms import UserForm
+from musicApp.views import home
 
 from django.http import HttpResponse
 
-from musicApp.views import home, my_songs
 
 # Create your views here.
 
-def register(request):
-    if request.method == 'POST':
-        form = UserForm(data=request.POST)
-        try:
-            User.objects.create_user(
-                form.data.get('username'),
-                form.data.get('email'),
-                form.data.get('password1')
-                )
-            return redirect(to=login)
-        except Exception as ex:
-            print(ex)
-            return redirect(to=register)
-    else:
-        form = UserForm()
-        return render(request, 'register.html', {
-            'form': form
-        })
+def index(request):
+    return render(request, 'index.html')
 
-def login(request):
+def signin(request):
     if request.method == 'POST':
-        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-        if user is None:
-            form = AuthenticationForm()
-            return render(request, 'signin.html', {'form': form, 'error':'username or password incorrect'})
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect(to=home)
+            else:
+                return redirect(to=signin)
         else:
-            login(user)
-            return redirect(to=home)
-        
+            return redirect(to=signin)          
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form':form})
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect(to=home)
+        else:
+            return redirect(to=signup)
+    else:
+        form = UserForm()
+        return render(request, 'register.html', {'form':form})
+    
+def deslogin(request):
+    logout(request)
+    return redirect(to=home)
 
