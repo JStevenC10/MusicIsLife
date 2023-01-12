@@ -11,7 +11,8 @@ def home(request):
 
 @login_required
 def my_songs(request):
-    songs = Song.objects.all()
+    songs = Song.objects.filter(author=request.user)
+    print(request.user)
     return render(request, 'songs.html', {'songs':songs})
 
 @login_required
@@ -24,7 +25,8 @@ def add_song(request):
         artist = artist,
         song = song,
         duration = duration,
-        gender = gender
+        gender = gender,
+        author = request.user
     )
     return redirect(to=my_songs)
 

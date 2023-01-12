@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 from .forms import UserForm
-from musicApp.views import home
+from musicApp.views import home, my_songs
 
 from django.http import HttpResponse
 
@@ -17,16 +17,19 @@ def index(request):
 def signin(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+        if form.is_valid(): 
+            username = request.POST['username']
+            password = request.POST['password']
             user = authenticate(username=username, password=password)
             if user is not None:
+                print(user)
                 login(request, user)
-                return redirect(to=home)
+                return redirect(to=my_songs)
             else:
+                print('user not found')
                 return redirect(to=signin)
         else:
+            print('ups error')
             return redirect(to=signin)          
     else:
         form = AuthenticationForm()
@@ -39,7 +42,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect(to=home)
+            return redirect(to=my_songs)
         else:
             return redirect(to=signup)
     else:
