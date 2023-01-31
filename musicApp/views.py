@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from .models import Song
 
@@ -8,10 +9,13 @@ from .models import Song
 def home(request):
     return render(request, 'home.html')
 
+@login_required
 def my_songs(request):
-    songs = Song.objects.all()
+    songs = Song.objects.filter(author=request.user)
+    print(request.user)
     return render(request, 'songs.html', {'songs':songs})
 
+@login_required
 def add_song(request):
     artist = request.POST['artist']
     song = request.POST['song']
@@ -21,10 +25,12 @@ def add_song(request):
         artist = artist,
         song = song,
         duration = duration,
-        gender = gender
+        gender = gender,
+        author = request.user
     )
     return redirect(to=my_songs)
 
+@login_required
 def update(request, id):
     upd_song = Song.objects.get(id=id)
     if request.method == 'POST':
@@ -41,6 +47,7 @@ def update(request, id):
     else:
         return render(request, 'update_song.html', {'song' : upd_song})
 
+@login_required
 def delete(request, id):
     del_song = Song.objects.get(id=id)
     del_song.delete()
