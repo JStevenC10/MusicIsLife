@@ -14,28 +14,6 @@ from django.http import HttpResponse
 def index(request):
     return render(request, 'index.html')
 
-def signin(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid(): 
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                print(user)
-                login(request, user)
-                return redirect(to=my_songs)
-            else:
-                print('user not found')
-                return redirect(to=signin)
-        else:
-            print('ups error')
-            return redirect(to=signin)          
-    else:
-        form = AuthenticationForm()
-        return render(request, 'login.html', {'form':form})
-
-
 def signup(request):
     if request.method == 'POST':
         form = UserForm(request.POST)

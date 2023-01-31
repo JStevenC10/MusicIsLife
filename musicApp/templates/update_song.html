@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %} Update song! {% endblock %}
 
@@ -8,8 +9,18 @@
             <h1 class="text-center text-success">Update song!</h2>
             <div class="card">
                 <div class="card card-body">
-                    <form action="{% url 'update' song.id %}" method='POST'>
+                    <form action="{% url 'update' song.id %}" enctype='multipart/form-data' method='POST'>
                         {% csrf_token %}
+                        <div class="form-group mt-2">
+                            {% if song.photo %}
+                                <img src="{{song.photo.url}}" width="130">
+                            {% else %}
+                                <img src="{% static 'img/photo.png' %}" width="130">
+                            {% endif %}
+                        </div>
+                        <div class="form-group mt-2">                            
+                            <input class="form-control" type="file" placeholder='photo' name='photo' value='{{song.photo}}'>
+                        </div>
                         <div class="form-group mt-2">
                             <input class="form-control" type="text" placeholder='{{song.artist}}' name='artist' value='{{song.artist}}'>
                         </div>
