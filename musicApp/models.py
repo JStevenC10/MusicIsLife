@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Song(models.Model):
+    photo = models.ImageField(null=True, blank=True)
     artist = models.CharField(max_length=100)
     song = models.CharField(max_length=100)
     duration = models.FloatField()

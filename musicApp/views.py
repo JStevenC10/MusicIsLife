@@ -17,11 +17,13 @@ def my_songs(request):
 
 @login_required
 def add_song(request):
+    photo = request.FILES['photo']
     artist = request.POST['artist']
     song = request.POST['song']
     duration = float(request.POST['duration'])
     gender = request.POST['gender']
     song = Song.objects.create(
+        photo = photo,
         artist = artist,
         song = song,
         duration = duration,
@@ -34,6 +36,11 @@ def add_song(request):
 def update(request, id):
     upd_song = Song.objects.get(id=id)
     if request.method == 'POST':
+        try:
+            photo = request.FILES['photo']
+            upd_song.photo = photo
+        except:
+            pass
         artist = request.POST['artist']
         song = request.POST['song']
         duration = float(request.POST['duration'])
