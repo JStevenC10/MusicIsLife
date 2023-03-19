@@ -24,7 +24,12 @@
                             <input class="form-control" type="text" placeholder='Duration (min.sec)' name='duration' required>
                         </div>
                         <div class="form-group mt-2">
-                            <input class="form-control" type="text" placeholder='Gender' name='gender' required>
+                            <label for="gender">Choose Gender</label>
+                            <select name="gender" id="g" class='form-control'>
+                                {% for choice in choices  %}
+                                    <option value="{{choice.0}}">{{choice.0}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                             <button class="btn btn-success btn-block mt-2">Save</button>
                     </form>
