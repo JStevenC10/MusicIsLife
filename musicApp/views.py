@@ -12,12 +12,14 @@ def home(request):
 @login_required
 def my_songs(request):
     songs = Song.objects.filter(author=request.user)
-    print(request.user)
     return render(request, 'songs.html', {'songs':songs})
 
 @login_required
 def add_song(request):
-    photo = request.FILES['photo']
+    try:
+        photo = request.FILES['photo']
+    except:
+        photo = None
     artist = request.POST['artist']
     song = request.POST['song']
     duration = float(request.POST['duration'])
