@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from .models import Song
+from .models import Song, genders
 
 # Create your views here.
 
@@ -12,7 +12,8 @@ def home(request):
 @login_required
 def my_songs(request):
     songs = Song.objects.filter(author=request.user)
-    return render(request, 'songs.html', {'songs':songs})
+    choices = genders
+    return render(request, 'songs.html', {'songs':songs, 'choices': choices})
 
 @login_required
 def add_song(request):
