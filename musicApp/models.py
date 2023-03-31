@@ -21,7 +21,7 @@ class Song(models.Model):
     song = models.CharField(max_length=100)
     duration = models.FloatField()
     gender = models.CharField(max_length=50, choices=genders, default='RAP')
-    author = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='songs')
 
 
     def __str__(self):
