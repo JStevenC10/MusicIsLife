@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+        <h1>Reels!</h1>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>USER</th>
+                        <th>PHOTO</th>
+                        <th>ARTIST</th>
+                        <th>NAME</th>
+                        <th>DURATION</th>
+                        <th>GENDER</th>
+                        <th>COMMENTS</th>
+                        <th>OPTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for song in songs %}
+                        <tr>
+                            <td><a href="{% url 'profile' song.author.profile.id %}"> @{{song.author.username}}</a></td> 
+                            {% if song.photo %}
+                                <td><img src="{{song.photo.url}}" width="70"></td>
+                            {% else %}
+                                <td><img src="{% static 'img/photo.png' %}" width="70"></td>
+                            {% endif %}   
+                                                        
+                            <td>{{song.artist}}</td>
+                            <td>{{song.song}}</td>
+                            <td>{{song.duration}}</td>
+                            <td>{{song.gender}}</td>
+                            <td><a href="{% url 'comments' song.id %}">{{song.song_n.count}} comments</a></td>
+                            {% if song.author == request.user %}
+                                <td>
+                                    <a class="btn btn-info" href="{% url 'update' song.id %}">UPDATE</a>
+                                    <a class="btn btn-danger" href="{% url 'delete' song.id %}">DELETE</a>
+                                </td>            
+                            {% endif %}                            
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

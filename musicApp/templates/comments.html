@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+        <h2>{{song.song}} <br>
+            by:<a href="{% url 'profile' song.author.profile.id %}">@{{song.author}}</a></h2>
+        <div class="card">
+            <div class="card card-body">
+                <form action=""  method='POST'>
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button class="btn btn-success btn-block mt-2">comment</button>
+                </form>
+            </div>
+        </div> 
+    </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+        <h1>All comments!</h1>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>USER!</th>
+                        <th>COMMENT!</th>   
+                        <th>ACTIONS</th>                     
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in comments %}
+                        <tr>
+                            <td><a href="{% url 'profile' c.user.profile.id %}"> @{{c.user.username}}</a></td>
+                            <td>{{c.content}}</td>
+                            {% if c.user == request.user %}
+                                <td><a class='btn btn-danger' href="{% url 'delete_comment' c.id %}">delete</a></td>                           
+                            {% endif %}                                                      
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

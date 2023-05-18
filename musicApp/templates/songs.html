@@ -45,9 +45,10 @@
                         <tr>
                             <th>PHOTO</th>
                             <th>ARTIST</th>
-                            <th>SONG NAME</th>
+                            <th>NAME</th>
                             <th>DURATION</th>
                             <th>GENDER</th>
+                            <th>COMMENTS</th>
                             <th>OPTIONS</th>
                         </tr>
                     </thead>
@@ -63,6 +64,7 @@
                                 <td>{{song.song}}</td>
                                 <td>{{song.duration}}</td>
                                 <td>{{song.gender}}</td>
+                                <td><a href="{% url 'comments' song.id %}">{{song.song_n.count}} comments!</a></td>
                                 <td>
                                     <a class="btn btn-info" href="{% url 'update' song.id %}">UPDATE</a>
                                     <a class="btn btn-danger" href="{% url 'delete' song.id %}">DELETE</a>

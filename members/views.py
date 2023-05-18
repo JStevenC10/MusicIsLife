@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse    
+from django.contrib.auth.models import User
+
 
 from .forms import UserForm, ProfileForm
 from musicApp.views import home, my_songs
@@ -30,24 +30,29 @@ def signup(request):
         form = UserForm()
         return render(request, 'register.html', {'form':form})
     
-def profile(request):
-    upd_profile = request.user.profile
-    if request.method == 'POST':
-        form = ProfileForm(instance=upd_profile, data=request.POST)
-        if form.is_valid():
-            upd_profile = form.save(commit=False)
-            if request.FILES:
-                upd_profile.image = request.FILES['image']
-                upd_profile.save()
-            upd_profile.save()
-            return redirect(to=profile)
+def profile(request, pk):
+    get_profile = Profile.objects.filter(pk=pk).first()
+    if get_profile.user == request.user:
+        if request.method == 'POST':
+            form = ProfileForm(instance=get_profile, data=request.POST)
+            if form.is_valid():
+                get_profile = form.save(commit=False)
+                if request.FILES:
+                    get_profile.image = request.FILES['image']
+                    get_profile.save()
+                get_profile.save()
+                return redirect(to=profile, pk=pk)
+        else:
+            form = ProfileForm(instance=get_profile)    
+            context = {
+                'form': form,
+                'profile':get_profile
+                }
+            return render(request, 'profile.html', context)
+    
     else:
-        form = ProfileForm(instance=upd_profile)    
-    context = {
-        'form': form
-    }
-    return render(request, 'profile.html', context)
-   
+        context = {'profile': get_profile} 
+        return render(request, 'profile.html', context)
 
 
 def deslogin(request):
