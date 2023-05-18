@@ -1,12 +1,15 @@
-from typing import Any
-from django.db.models.query import QuerySet
+
+
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from .models import Song, genders, Comment
 
+from .models import Song, genders, Comment
+from .forms import CommentForm
+
+from django.http import HttpResponse, JsonResponse
 # Create your views here.
 
 def home(request):
@@ -68,6 +71,31 @@ def update(request, id):
         return redirect(to=my_songs)
     else:
         return render(request, 'update_song.html', {'song' : upd_song})
+
+@login_required
+def comments_s(request, pk):
+    song = Song.objects.get(pk=pk)
+    if request.method == 'GET':
+        form = CommentForm()    
+        comments = Comment.objects.filter(song=song)
+        context = {'song': song, 'comments':comments, 'form':form}
+        return render(request, 'comments.html', context)
+    else:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            com = form.save(commit=False)
+            com.user = request.user 
+            com.song = song
+            com.save()
+            return redirect(to=comments_s, pk=song.id)
+        else:
+            return redirect('reels')
+
+def delete_comment(request, pk):
+    del_comment = Comment.objects.get(pk=pk)
+    del_comment.delete()
+    return redirect(comments_s, pk=del_comment.song.id)
+
 
 @login_required
 def delete(request, id):

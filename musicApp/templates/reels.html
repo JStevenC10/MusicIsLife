@@ -21,7 +21,7 @@
                 <tbody>
                     {% for song in songs %}
                         <tr>
-                            <td><a href="{% url 'profile' song.author.profile.id %}"> {{song.author.username}}</a></td> 
+                            <td><a href="{% url 'profile' song.author.profile.id %}"> @{{song.author.username}}</a></td> 
                             {% if song.photo %}
                                 <td><img src="{{song.photo.url}}" width="70"></td>
                             {% else %}
@@ -32,7 +32,7 @@
                             <td>{{song.song}}</td>
                             <td>{{song.duration}}</td>
                             <td>{{song.gender}}</td>
-                            <td><a href="#">view comments</a></td>
+                            <td><a href="{% url 'comments' song.id %}">{{song.song_n.count}} comments</a></td>
                             {% if song.author == request.user %}
                                 <td>
                                     <a class="btn btn-info" href="{% url 'update' song.id %}">UPDATE</a>

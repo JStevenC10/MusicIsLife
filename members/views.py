@@ -51,7 +51,7 @@ def profile(request, pk):
             return render(request, 'profile.html', context)
     
     else:
-        context = {'profile': profile} 
+        context = {'profile': get_profile} 
         return render(request, 'profile.html', context)
 
 
