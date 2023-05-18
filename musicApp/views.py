@@ -1,19 +1,31 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from .models import Song, genders
+from .models import Song, genders, Comment
 
 # Create your views here.
 
 def home(request):
     return render(request, 'home.html')
 
+class ReelsView(ListView):
+    model = Song
+    context_object_name = 'songs'
+    template_name = 'reels.html'
+
+    def get_queryset(self):
+        return Song.objects.all()
+    
+
 @login_required
 def my_songs(request):
     songs = Song.objects.filter(author=request.user)
     choices = genders
-    return render(request, 'songs.html', {'songs':songs, 'choices': choices})
+    return render(request, 'songs.html', {'songs':songs, 'choices':choices})
 
 @login_required
 def add_song(request):
